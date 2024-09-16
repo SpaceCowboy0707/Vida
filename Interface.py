@@ -34,10 +34,10 @@ if style:
 
     # Display the full table with full width
     st.write("### Full Data Table")
-    st.dataframe(formatted_table.style.set_table_styles([{
+    st.dataframe(style_tables[style].style.set_table_styles([{
         'selector': 'th',
         'props': [('white-space', 'normal')]
-    }]), use_container_width=True)
+    }]), width=1500, height=600)
 
     st.write("### Detailed Metrics with Visualization")
 
