@@ -29,12 +29,15 @@ style = st.sidebar.selectbox("Select Style", filtered_styles)
 if style:
     st.write(f"## Analysis for Style: {style}")
 
-    # Display the full table
+    # Format the table with thousand separators for all numbers
+    formatted_table = style_tables[style].applymap(lambda x: "{:,.0f}".format(x) if isinstance(x, (int, float)) else x)
+
+    # Display the full table with full width
     st.write("### Full Data Table")
-    st.dataframe(style_tables[style].style.set_table_styles([{
+    st.dataframe(formatted_table.style.set_table_styles([{
         'selector': 'th',
         'props': [('white-space', 'normal')]
-    }]), width=1500, height=600)
+    }]), use_container_width=True)
 
     st.write("### Detailed Metrics with Visualization")
 
