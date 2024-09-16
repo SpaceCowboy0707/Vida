@@ -7,8 +7,6 @@ import matplotlib.pyplot as plt
 with open('style_tables.pkl', 'rb') as f:
     style_tables = pickle.load(f)
 
-st.set_page_config(page_title=None, page_icon="✌️", layout="wide", initial_sidebar_state="auto", menu_items=None)
-
 
 # Title of the app
 st.title("Inventory Turnover Analysis")
