@@ -73,8 +73,12 @@ if authentication_status:
     # Display the selected style's table
     if style:
         st.write(f"## Analysis for Style: {style}")
-        df_copy = df_copy.drop(columns=['Grand Total'])
+     
         df_copy = style_tables[style].copy()
+
+            # Remove 'Grand Total' column from the DataFrame
+        if 'Grand Total' in df_copy.columns:
+            df_copy = df_copy.drop('Grand Total', axis=1)
 
         # Get the index labels present in the DataFrame
         index_labels = df_copy.index.tolist()
