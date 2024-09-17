@@ -72,68 +72,68 @@ if authentication_status:
 
     # Display the selected style's table
     if style:
-    st.write(f"## Analysis for Style: {style}")
+        st.write(f"## Analysis for Style: {style}")
 
-    df_copy = style_tables[style].copy()
+        df_copy = style_tables[style].copy()
 
-    # Remove $, %, and commas from all cells
-    df_copy = df_copy.replace('[\$,]', '', regex=True)\
-                     .replace('[\%,]', '', regex=True)\
-                     .replace(',', '', regex=True)
+        # Remove $, %, and commas from all cells
+        df_copy = df_copy.replace('[\$,]', '', regex=True)\
+                         .replace('[\%,]', '', regex=True)\
+                         .replace(',', '', regex=True)
 
-    # Convert to numeric where possible
-    df_copy = df_copy.applymap(lambda x: pd.to_numeric(x, errors='ignore'))
+        # Convert to numeric where possible
+        df_copy = df_copy.applymap(lambda x: pd.to_numeric(x, errors='ignore'))
 
-    # Define the rows that need specific formatting
-    dollar_rows = ['Storage Cost', 'Storage Cost per Pair', 'Gross Sales', 'Profit']
-    percent_rows = ['Gross Margin', 'Net Margin']
-    two_decimal_rows = ['Inventory Turn', 'Months on Hand']
+        # Define the rows that need specific formatting
+        dollar_rows = ['Storage Cost', 'Storage Cost per Pair', 'Gross Sales', 'Profit']
+        percent_rows = ['Gross Margin', 'Net Margin']
+        two_decimal_rows = ['Inventory Turn', 'Months on Hand']
 
-    # Get the index labels present in the DataFrame
-    index_labels = df_copy.index.tolist()
+        # Get the index labels present in the DataFrame
+        index_labels = df_copy.index.tolist()
 
-    # Filter the lists to only include existing rows
-    dollar_rows = [row for row in dollar_rows if row in index_labels]
-    percent_rows = [row for row in percent_rows if row in index_labels]
-    two_decimal_rows = [row for row in two_decimal_rows if row in index_labels]
+        # Filter the lists to only include existing rows
+        dollar_rows = [row for row in dollar_rows if row in index_labels]
+        percent_rows = [row for row in percent_rows if row in index_labels]
+        two_decimal_rows = [row for row in two_decimal_rows if row in index_labels]
 
-    # Create a set of all rows that have specific formatting
-    all_specific_rows = set(dollar_rows + percent_rows + two_decimal_rows)
+        # Create a set of all rows that have specific formatting
+        all_specific_rows = set(dollar_rows + percent_rows + two_decimal_rows)
 
-    # Define general_rows as rows not in all_specific_rows
-    general_rows = [row for row in index_labels if row not in all_specific_rows]
+        # Define general_rows as rows not in all_specific_rows
+        general_rows = [row for row in index_labels if row not in all_specific_rows]
 
-    # Create a Styler object
-    formatted_table = df_copy.style
+        # Create a Styler object
+        formatted_table = df_copy.style
 
-    # Apply specific formatting first
+        # Apply specific formatting first
 
-    # Apply dollar formatting to specified rows
-    if dollar_rows:
-        formatted_table = formatted_table.format("${:,.2f}", subset=pd.IndexSlice[dollar_rows, :])
+        # Apply dollar formatting to specified rows
+        if dollar_rows:
+            formatted_table = formatted_table.format("${:,.2f}", subset=pd.IndexSlice[dollar_rows, :])
 
-    # Apply percentage formatting to specified rows
-    if percent_rows:
-        formatted_table = formatted_table.format("{:.2f}%", subset=pd.IndexSlice[percent_rows, :])
+        # Apply percentage formatting to specified rows
+        if percent_rows:
+            formatted_table = formatted_table.format("{:.2f}%", subset=pd.IndexSlice[percent_rows, :])
 
-    # Apply two-decimal formatting to specified rows
-    if two_decimal_rows:
-        formatted_table = formatted_table.format("{:,.2f}", subset=pd.IndexSlice[two_decimal_rows, :])
+        # Apply two-decimal formatting to specified rows
+        if two_decimal_rows:
+            formatted_table = formatted_table.format("{:,.2f}", subset=pd.IndexSlice[two_decimal_rows, :])
 
-    # Apply general formatting to the remaining rows
-    if general_rows:
-        formatted_table = formatted_table.format("{:,.0f}", subset=pd.IndexSlice[general_rows, :], na_rep="")
+        # Apply general formatting to the remaining rows
+        if general_rows:
+            formatted_table = formatted_table.format("{:,.0f}", subset=pd.IndexSlice[general_rows, :], na_rep="")
 
-    # Display the full table with full width
-    st.write("### Full Data Table")
-    st.dataframe(
-        formatted_table.set_table_styles([{
-            'selector': 'th',
-            'props': [('white-space', 'normal')]
-        }]),
-        width=1500,
-        height=600
-    )
+        # Display the full table with full width
+        st.write("### Full Data Table")
+        st.dataframe(
+            formatted_table.set_table_styles([{
+                'selector': 'th',
+                'props': [('white-space', 'normal')]
+            }]),
+            width=1500,
+            height=600
+        )
 
 
 
