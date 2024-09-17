@@ -41,13 +41,19 @@ authenticator = stauth.Authenticate(credentials, 'cookie_name', 'signature_key',
 name, authentication_status, username = authenticator.login(location='main')
 
 # Show different content based on authentication status
+def format_thousands(x):
+    if pd.isnull(x):
+        return ""  # You can choose a placeholder like "N/A" if preferred
+    elif isinstance(x, (int, float)):
+        return "{:,.0f}".format(x)
+    else:
+        return x  # Return the value as is if it's not numeric
+
 if authentication_status:
     st.write(f'Welcome {name}!')
 
     # Optional: Add a logout button in the sidebar
     authenticator.logout('Logout', 'sidebar')
-
-    # **All your data display and interface code goes here**
 
     # Title of the app
     st.title("Inventory Turnover Analysis")
@@ -68,8 +74,8 @@ if authentication_status:
     if style:
         st.write(f"## Analysis for Style: {style}")
 
-        # Create a Styler object and format all numeric columns with thousand separators
-        formatted_table = style_tables[style].style.format("{:,.0f}")
+        # Apply custom formatter to handle NaN values
+        formatted_table = style_tables[style].style.format(format_thousands)
 
         # Display the full table with full width
         st.write("### Full Data Table")
