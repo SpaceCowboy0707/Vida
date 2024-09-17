@@ -77,10 +77,25 @@ if authentication_status:
         df_copy = style_tables[style].copy()
 
         # Remove $, %, and commas from all cells
-        df_copy = df_copy.replace('[\$,]', '', regex=True).replace('[\%,]', '', regex=True).replace(',', '', regex=True)
+        df_copy = df_copy.replace('[\$,]', '', regex=True)\
+                         .replace('[\%,]', '', regex=True)\
+                         .replace(',', '', regex=True)
 
         # Convert to numeric where possible
         df_copy = df_copy.applymap(lambda x: pd.to_numeric(x, errors='ignore'))
+
+        # Define the rows that need specific formatting
+        dollar_rows = ['Storage Cost', 'Storage Cost per Pair', 'Gross Sales', 'Profit']
+        percent_rows = ['Gross Margin', 'Net Margin']
+        two_decimal_rows = ['Inventory Turn', 'Months on Hand']
+
+        # Get the index labels present in the DataFrame
+        index_labels = df_copy.index.tolist()
+
+        # Filter the lists to only include existing rows
+        dollar_rows = [row for row in dollar_rows if row in index_labels]
+        percent_rows = [row for row in percent_rows if row in index_labels]
+        two_decimal_rows = [row for row in two_decimal_rows if row in index_labels]
 
         # Create a Styler object
         formatted_table = df_copy.style
@@ -88,15 +103,26 @@ if authentication_status:
         # Apply general formatting to all numeric cells
         formatted_table = formatted_table.format("{:,.0f}", na_rep="")
 
-        # Apply specific formatting to 'Inventory Turn' and 'Months on Hand'
-        formatted_table = formatted_table.format("{:,.2f}", subset=pd.IndexSlice[['Inventory Turn', 'Months on Hand'], :])
+        # Apply specific formatting
+        if dollar_rows:
+            formatted_table = formatted_table.format("${:,.2f}", subset=pd.IndexSlice[dollar_rows, :])
+
+        if percent_rows:
+            formatted_table = formatted_table.format("{:.2f}%", subset=pd.IndexSlice[percent_rows, :])
+
+        if two_decimal_rows:
+            formatted_table = formatted_table.format("{:,.2f}", subset=pd.IndexSlice[two_decimal_rows, :])
 
         # Display the full table with full width
         st.write("### Full Data Table")
-        st.dataframe(formatted_table.set_table_styles([{
-            'selector': 'th',
-            'props': [('white-space', 'normal')]
-        }]), width=1500, height=600)
+        st.dataframe(
+            formatted_table.set_table_styles([{
+                'selector': 'th',
+                'props': [('white-space', 'normal')]
+            }]),
+            width=1500,
+            height=600
+        )
 
 
         st.write("### Detailed Metrics with Visualization")
