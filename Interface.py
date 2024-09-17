@@ -72,31 +72,31 @@ if authentication_status:
 
     # Display the selected style's table
     if style:
-    st.write(f"## Analysis for Style: {style}")
+        st.write(f"## Analysis for Style: {style}")
 
-    df_copy = style_tables[style].copy()
+        df_copy = style_tables[style].copy()
 
-    # Remove $, %, and commas from all cells
-    df_copy = df_copy.replace('[\$,]', '', regex=True).replace('[\%,]', '', regex=True).replace(',', '', regex=True)
+        # Remove $, %, and commas from all cells
+        df_copy = df_copy.replace('[\$,]', '', regex=True).replace('[\%,]', '', regex=True).replace(',', '', regex=True)
 
-    # Convert to numeric where possible
-    df_copy = df_copy.applymap(lambda x: pd.to_numeric(x, errors='ignore'))
+        # Convert to numeric where possible
+        df_copy = df_copy.applymap(lambda x: pd.to_numeric(x, errors='ignore'))
 
-    # Create a Styler object
-    formatted_table = df_copy.style
+        # Create a Styler object
+        formatted_table = df_copy.style
 
-    # Apply general formatting to all numeric cells
-    formatted_table = formatted_table.format("{:,.0f}", na_rep="")
+        # Apply general formatting to all numeric cells
+        formatted_table = formatted_table.format("{:,.0f}", na_rep="")
 
-    # Apply specific formatting to 'Inventory Turn' and 'Months on Hand'
-    formatted_table = formatted_table.format("{:,.2f}", subset=pd.IndexSlice[['Inventory Turn', 'Months on Hand'], :])
+        # Apply specific formatting to 'Inventory Turn' and 'Months on Hand'
+        formatted_table = formatted_table.format("{:,.2f}", subset=pd.IndexSlice[['Inventory Turn', 'Months on Hand'], :])
 
-    # Display the full table with full width
-    st.write("### Full Data Table")
-    st.dataframe(formatted_table.set_table_styles([{
-        'selector': 'th',
-        'props': [('white-space', 'normal')]
-    }]), width=1500, height=600)
+        # Display the full table with full width
+        st.write("### Full Data Table")
+        st.dataframe(formatted_table.set_table_styles([{
+            'selector': 'th',
+            'props': [('white-space', 'normal')]
+        }]), width=1500, height=600)
 
 
         st.write("### Detailed Metrics with Visualization")
