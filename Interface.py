@@ -3,6 +3,7 @@ import streamlit_authenticator as stauth
 import pickle
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 # Load the style_tables dictionary from the pickle file
 with open('style_tables.pkl', 'rb') as f:
@@ -67,15 +68,16 @@ if authentication_status:
     if style:
         st.write(f"## Analysis for Style: {style}")
 
-        # Format the table with thousand separators for all numbers
-        formatted_table = style_tables[style].applymap(lambda x: "{:,.0f}".format(x) if isinstance(x, (int, float)) else x)
+        # Create a Styler object and format all numeric columns with thousand separators
+        formatted_table = style_tables[style].style.format("{:,.0f}")
 
         # Display the full table with full width
         st.write("### Full Data Table")
-        st.dataframe(style_tables[style].style.set_table_styles([{
+        st.dataframe(formatted_table.set_table_styles([{
             'selector': 'th',
             'props': [('white-space', 'normal')]
         }]), width=1500, height=600)
+
 
         st.write("### Detailed Metrics with Visualization")
 
