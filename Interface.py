@@ -76,6 +76,9 @@ if authentication_status:
 
         df_copy = style_tables[style].copy()
 
+        # Remove 'Storage Cost per Pair' row from the DataFrame
+        if 'Storage Cost per Pair' in df_copy.index:
+            df_copy = df_copy.drop('Storage Cost per Pair')
         # Get the index labels present in the DataFrame
         index_labels = df_copy.index.tolist()
 
