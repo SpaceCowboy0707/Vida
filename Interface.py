@@ -76,14 +76,11 @@ if authentication_status:
 
         df_copy = style_tables[style].copy()
 
-        # Remove 'Storage Cost per Pair' row from the DataFrame
-        if 'Storage Cost per Pair' in df_copy.index:
-            df_copy = df_copy.drop('Storage Cost per Pair')
         # Get the index labels present in the DataFrame
         index_labels = df_copy.index.tolist()
 
         # Define the rows that need specific formatting
-        dollar_rows = ['Storage Cost', 'Gross Sales', 'Profit']
+        dollar_rows = ['Storage Cost', 'Storage Cost Per Pair','Gross Sales', 'Profit']
         percent_rows = ['Gross Margin', 'Net Margin']
         two_decimal_rows = ['Inventory Turn', 'Months on Hand']
 
